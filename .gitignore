@@ -11,6 +11,7 @@ Thumbs.db
 dist/
 build/
 out/
+bin/
 
 # Dependencies
 node_modules/

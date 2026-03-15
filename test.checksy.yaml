@@ -1,4 +1,4 @@
 rules:
-  - name: placeholder
-    check: echo "Test..."
+  - name: go-test
+    check: go test ./...
     severity: error

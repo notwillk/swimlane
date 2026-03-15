@@ -1,8 +1,8 @@
 [no-exit-message]
 build *args:
     @case "{{args}}" in \
-        "") echo "building..." ;; \
-        "--watch") echo "building (with watch)..." ;; \
+        "") go build -o bin/swimlane ./cmd/swimlane ;; \
+        "--watch") watchexec $([ -f .testignore ] && echo '--ignore-file .testignore') -- just build ;; \
         *) echo "Usage: just build [--watch]" >&2; exit 1 ;; \
     esac
 
@@ -24,8 +24,8 @@ doctor *args:
 [no-exit-message]
 format *args:
     @case "{{args}}" in \
-        "") echo "formatting..." ;; \
-        "--check") echo "checking format..." ;; \
+        "") gofmt -w . ;; \
+        "--check") test -z "$$(gofmt -l .)" || (gofmt -l . ; exit 1) ;; \
         *) echo "Usage: just format [--check]" >&2; exit 1 ;; \
     esac
 

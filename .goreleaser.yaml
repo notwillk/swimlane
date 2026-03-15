@@ -1,0 +1,34 @@
+version: 2
+
+project_name: swimlane
+
+builds:
+  - id: swimlane
+    main: ./cmd/swimlane
+    binary: swimlane
+    goos:
+      - linux
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - -s -w
+
+archives:
+  - id: default
+    format: tar.gz
+    format_overrides:
+      - goos: windows
+        format: zip
+    name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}"
+    builds:
+      - swimlane
+
+checksum:
+  name_template: "checksums.txt"
+
+release:
+  github:
+    owner: notwillk
+    name: swimlane
