@@ -14,7 +14,7 @@ Or with a specific version:
 curl -sSL https://raw.githubusercontent.com/notwillk/swimlane/main/scripts/install.sh | sh -s -- v1.0.0
 ```
 
-### Install va devcontainer feature
+### Install via devcontainer feature
 
 ```json
 {
