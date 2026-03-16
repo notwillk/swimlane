@@ -25,12 +25,12 @@ const (
 // ConfigDir is the directory containing the config file (or cwd if no file);
 // tickets glob and default_path are resolved relative to ConfigDir.
 type Config struct {
-	Tickets                      string            `yaml:"tickets"`
-	DefaultPath                   string            `yaml:"default_path"`
-	Default                       Defaults          `yaml:"default"`
-	Actions                       map[string]Action `yaml:"actions"`
-	CloseParentWhenSubtasksDone   string            `yaml:"close_parent_when_subtasks_done"` // never | always | when-empty | when-matches
-	ConfigDir                     string            `yaml:"-"` // set by loader; not in YAML
+	Tickets                     string            `yaml:"tickets"`
+	DefaultPath                 string            `yaml:"default_path"`
+	Default                     Defaults          `yaml:"default"`
+	Actions                     map[string]Action `yaml:"actions"`
+	CloseParentWhenSubtasksDone string            `yaml:"close_parent_when_subtasks_done"` // never | always | when-empty | when-matches
+	ConfigDir                   string            `yaml:"-"`                               // set by loader; not in YAML
 }
 
 // ValidPriorities is the set of allowed priority values.
