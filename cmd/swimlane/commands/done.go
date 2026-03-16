@@ -40,5 +40,5 @@ func runDone(cmd *cobra.Command, args []string) error {
 	if err := os.Remove(path); err != nil {
 		return fmt.Errorf("delete ticket: %w", err)
 	}
-	return nil
+	return ticket.CheckParentsWhenSubtaskDone(cfg, ulidArg)
 }

@@ -9,7 +9,7 @@ swimlane is a CLI kanban-style task system. Tickets are **Markdown files with YA
 ## Commands
 
 - **`swimlane ls`** — List tickets. Use `--priority`, `--tag`, `--status`, `--ready` to filter. Prefix with `!` to negate (e.g. `--tag !infra`). Use `--csv` or `--json` for machine-readable output.
-- **`swimlane new "title"`** — Create a new ticket. Prints the path to the created file.
+- **`swimlane create [title]`** — Create a new ticket (reads description from stdin unless `--no-description`). Use `--claim`, `--start`, etc. to also apply lifecycle actions.
 - **`swimlane next`** — Print the path of the next ticket to implement (ready, todo, not blocked; respects priority and filters). Use the same filter flags as `ls` for sharding (e.g. `--tag backend`).
 - **`swimlane done <ulid>`** — Mark a ticket complete by deleting its file. Use the ULID from the filename or from `swimlane ls`.
 - **`swimlane schema-json config`** / **`swimlane schema-json ticket`** — Print JSON schema for config or ticket frontmatter.

@@ -23,7 +23,9 @@ This skill tells you how to:
   - Optional:
     - `$schema`: JSON Schema URI or path for the frontmatter (if present, new tickets often reuse it)
     - `title`: short description
+    - `assignee`: user assigned to the ticket (e.g. for `swimlane ls --mine`)
     - `blocked_by`: ULID list of tickets that must finish first
+    - `subtasks`: ULID list of tickets that break down this ticket’s work (when all subtasks are done, parent may be auto-closed per config)
     - `tags`: string list (e.g. `backend`, `frontend`, `infra`, `auth`)
 - **Config file** (usually `.swimlane.yaml`, `swimlane.yaml`, or `~/.config/swimlane/config.yaml`):
   - `tickets`: glob for ticket discovery (e.g. `tickets/**/*.md`, `todo/**/*.md`)
@@ -51,7 +53,7 @@ Always run these from the repo root unless a config or fixture instructs you oth
     - `--json`: JSON array of tickets
 
 - **Create a new ticket**
-  - `swimlane new "implement login api"`
+  - `swimlane create "implement login api"`
   - Prints the created path, e.g. `todo/01KKW52FZYXA77KTF1JFZSJJY0-life-cycle-actions.md`
   - Frontmatter is seeded from config `default` (including `$schema` if present).
 
@@ -182,7 +184,7 @@ When coordinating with other agents, choose disjoint filter sets (e.g. one agent
 
 - **`default.$schema`**
   - Some configs set `default.$schema` (e.g. a path like `.schemas/ticket.json`).
-  - New tickets created with `swimlane new` will copy this `$schema` into ticket frontmatter.
+  - New tickets created with `swimlane create` will copy this `$schema` into ticket frontmatter.
   - When editing frontmatter, keep `$schema` pointing at the intended schema unless asked to change it.
 
 - **Fixtures**
@@ -223,7 +225,8 @@ When you are in a **planning mode** (for example, a user asks you to “create a
    - Instead of inventing your own ad-hoc todo list in the plan, you should:
      - Identify concrete, actionable tasks that belong on the swimlane board.
      - For each such task that does not already exist, create a new ticket with:
-       - `swimlane new "short, action-oriented title"` (optionally with `--config` if needed).
+       - `swimlane create "short, action-oriented title"` (optionally with `--config` if needed).
+     - When a task naturally breaks into sub-items, create a **parent ticket** for the overall work and **subtask tickets** for each part; then set the parent’s `subtasks` frontmatter to the list of those subtask ULIDs (in order). That way the board reflects the hierarchy and parents can auto-close when all subtasks are done (per repo config).
    - Use the config’s `default` block to pre-fill `priority`, `ready`, `tags`, and optional `$schema`.
 
 2. **Name and tag tickets appropriately**

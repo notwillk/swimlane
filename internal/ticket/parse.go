@@ -18,7 +18,9 @@ type Frontmatter struct {
 	Priority  string   `yaml:"priority"`
 	Status    string   `yaml:"status"`
 	Ready     bool     `yaml:"ready"`
+	Assignee  string   `yaml:"assignee,omitempty"`
 	BlockedBy []string `yaml:"blocked_by"`
+	Subtasks  []string `yaml:"subtasks"`
 	Tags      []string `yaml:"tags"`
 }
 
@@ -52,7 +54,9 @@ func Parse(path string, data []byte) (*Ticket, error) {
 		Priority:  fm.Priority,
 		Status:    fm.Status,
 		Ready:     fm.Ready,
+		Assignee:  fm.Assignee,
 		BlockedBy: fm.BlockedBy,
+		Subtasks:  fm.Subtasks,
 		Tags:      fm.Tags,
 		Path:      path,
 	}
@@ -97,4 +101,31 @@ func ParseFrontmatterOnly(data []byte) (*Frontmatter, error) {
 // MarshalFrontmatter writes frontmatter to a YAML block (without --- delimiters; caller adds them).
 func MarshalFrontmatter(fm *Frontmatter) ([]byte, error) {
 	return yaml.Marshal(fm)
+}
+
+// ReadFrontmatterAndBody reads a ticket file and returns frontmatter and body (content after the closing ---).
+func ReadFrontmatterAndBody(path string) (*Frontmatter, []byte, error) {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return nil, nil, err
+	}
+	var fm Frontmatter
+	rest, err := frontmatter.Parse(strings.NewReader(string(data)), &fm)
+	if err != nil {
+		return nil, nil, err
+	}
+	return &fm, []byte(rest), nil
+}
+
+// WriteFrontmatterAndBody writes a ticket file with the given frontmatter and body.
+func WriteFrontmatterAndBody(path string, fm *Frontmatter, body []byte) error {
+	raw, err := MarshalFrontmatter(fm)
+	if err != nil {
+		return err
+	}
+	out := []byte("---\n")
+	out = append(out, raw...)
+	out = append(out, "---\n\n"...)
+	out = append(out, body...)
+	return os.WriteFile(path, out, 0644)
 }

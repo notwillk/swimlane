@@ -7,7 +7,9 @@ type Ticket struct {
 	Priority  string
 	Status    string
 	Ready     bool
+	Assignee  string
 	BlockedBy []string
+	Subtasks  []string
 	Tags      []string
 	Path      string
 }
