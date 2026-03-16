@@ -24,8 +24,8 @@ doctor *args:
 [no-exit-message]
 format *args:
     @case "{{args}}" in \
-        "") gofmt -w . ;; \
-        "--check") test -z "$$(gofmt -l .)" || (gofmt -l . ; exit 1) ;; \
+        "") find . -name '*.go' -not -path './vendor/*' -exec gofmt -w {} \; ;; \
+        "--check") sh scripts/format-check.sh ;; \
         *) echo "Usage: just format [--check]" >&2; exit 1 ;; \
     esac
 
