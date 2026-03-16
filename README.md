@@ -14,6 +14,17 @@ Or with a specific version:
 curl -sSL https://raw.githubusercontent.com/notwillk/swimlane/main/scripts/install.sh | sh -s -- v1.0.0
 ```
 
+### Install va devcontainer feature
+
+```json
+{
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+  "features": {
+    "ghcr.io/notwillk/swimlane/swimlane": {},
+  },
+}
+```
+
 Binary is installed to `/usr/local/bin/swimlane` by default. Set `INSTALL_DIR` to override.
 
 ## Config
