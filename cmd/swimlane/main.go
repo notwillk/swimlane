@@ -19,6 +19,7 @@ func main() {
 	root.AddCommand(commands.NewNext())
 	root.AddCommand(commands.NewDone())
 	root.AddCommand(commands.NewSchemaJSON())
+	root.AddCommand(commands.NewStatic())
 	root.AddCommand(commands.NewCompletion())
 	root.AddCommand(commands.NewSkill())
 

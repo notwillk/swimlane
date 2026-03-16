@@ -41,6 +41,7 @@ Example `.swimlane.yaml`:
 tickets: "tickets/**/*.md"
 default_path: tickets
 default:
+  $schema: ".schemas/ticket.json"   # optional; applied to new tickets when set
   priority: p2
   ready: true
   tags: []
@@ -54,6 +55,7 @@ default:
 | `swimlane new "title"` | Create a new ticket |
 | `swimlane next` | Print path of next ticket to implement |
 | `swimlane done <ulid>` | Mark ticket complete (deletes file) |
+| `swimlane static` | Validate config and all ticket YAML/frontmatter; exit 0 if pass, non-zero and list failures otherwise |
 | `swimlane schema-json config` | Print JSON schema for config |
 | `swimlane schema-json ticket` | Print JSON schema for ticket frontmatter |
 | `swimlane completion bash\|zsh\|fish` | Generate shell completions |
@@ -67,7 +69,7 @@ Use `--priority`, `--tag`, `--status`, `--ready`. Prefix with `!` to negate (e.g
 
 - **Filename**: `[ULID]-[slug].md` (e.g. `01J9T8ZK1BC5A9JH56T9Y9M1DX-implement-login-api.md`)
 - **Frontmatter** (required): `priority` (p0–p4), `status` (todo | in-progress | done), `ready` (boolean)
-- **Frontmatter** (optional): `title`, `blocked_by` (list of ULIDs), `tags`
+- **Frontmatter** (optional): `$schema`, `title`, `blocked_by` (list of ULIDs), `tags`
 - **Body**: Markdown implementation instructions
 
 ## Build
