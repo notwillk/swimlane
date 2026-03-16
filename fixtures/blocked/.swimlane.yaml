@@ -1,0 +1,7 @@
+tickets: "tickets/**/*.md"
+default_path: tickets
+
+default:
+  priority: p2
+  ready: true
+  tags: []

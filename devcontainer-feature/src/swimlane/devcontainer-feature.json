@@ -1,0 +1,12 @@
+{
+  "id": "swimlane",
+  "version": "1.0.0",
+  "name": "swimlane",
+  "options": {
+    "version": {
+      "type": "string",
+      "default": "latest",
+      "description": "Version of swimlane to install (e.g. latest, v1.0.0)"
+    }
+  }
+}
