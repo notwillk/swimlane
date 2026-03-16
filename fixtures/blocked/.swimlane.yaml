@@ -2,6 +2,7 @@ tickets: "tickets/**/*.md"
 default_path: tickets
 
 default:
+  $schema: ".schemas/ticket.json"
   priority: p2
   ready: true
   tags: []
