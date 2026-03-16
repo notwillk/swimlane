@@ -2,6 +2,7 @@ package config
 
 // Defaults holds default values for new tickets.
 type Defaults struct {
+	Schema   string   `yaml:"$schema"`
 	Priority string   `yaml:"priority"`
 	Ready    bool     `yaml:"ready"`
 	Tags     []string `yaml:"tags"`

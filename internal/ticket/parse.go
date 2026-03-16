@@ -13,6 +13,7 @@ import (
 
 // Frontmatter holds YAML frontmatter (known fields). Unknown fields are ignored by yaml.
 type Frontmatter struct {
+	Schema    string   `yaml:"$schema,omitempty"`
 	Title     string   `yaml:"title"`
 	Priority  string   `yaml:"priority"`
 	Status    string   `yaml:"status"`

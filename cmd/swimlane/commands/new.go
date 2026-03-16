@@ -1,6 +1,7 @@
 package commands
 
 import (
+	"crypto/rand"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -25,7 +26,7 @@ func runNew(cmd *cobra.Command, args []string) error {
 		return err
 	}
 	title := args[0]
-	id := ulid.MustNew(ulid.Now(), nil)
+	id := ulid.MustNew(ulid.Now(), rand.Reader)
 	slug := ticket.Slugify(title)
 	if slug == "" {
 		slug = id.String()
@@ -47,6 +48,9 @@ func runNew(cmd *cobra.Command, args []string) error {
 		Status:   "todo",
 		Ready:    cfg.Default.Ready,
 		Tags:     cfg.Default.Tags,
+	}
+	if cfg.Default.Schema != "" {
+		fm.Schema = cfg.Default.Schema
 	}
 	if fm.Tags == nil {
 		fm.Tags = []string{}

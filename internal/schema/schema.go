@@ -5,6 +5,7 @@ const Config = `{
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "swimlane config",
   "type": "object",
+  "additionalProperties": false,
   "properties": {
     "tickets": {
       "type": "string",
@@ -17,7 +18,12 @@ const Config = `{
     "default": {
       "type": "object",
       "description": "Default values applied when creating tickets",
+      "additionalProperties": false,
       "properties": {
+        "$schema": {
+          "type": "string",
+          "description": "JSON schema URI for ticket frontmatter (applied when creating new tickets)"
+        },
         "priority": { "type": "string", "enum": ["p0", "p1", "p2", "p3", "p4"] },
         "ready": { "type": "boolean" },
         "tags": {
@@ -35,8 +41,10 @@ const Ticket = `{
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "swimlane ticket frontmatter",
   "type": "object",
+  "additionalProperties": false,
   "required": ["priority", "status", "ready"],
   "properties": {
+    "$schema": { "type": "string", "description": "JSON schema URI for this frontmatter" },
     "title": { "type": "string" },
     "priority": { "type": "string", "enum": ["p0", "p1", "p2", "p3", "p4"] },
     "status": { "type": "string", "enum": ["todo", "in-progress", "done"] },
