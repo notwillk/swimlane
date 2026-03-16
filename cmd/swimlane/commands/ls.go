@@ -22,6 +22,7 @@ func NewLS() *cobra.Command {
 	cmd.Flags().StringSlice("tag", nil, "filter by tag (prefix with ! to negate)")
 	cmd.Flags().StringSlice("status", nil, "filter by status (prefix with ! to negate)")
 	cmd.Flags().StringSlice("ready", nil, "filter by ready (true/false, prefix with ! to negate)")
+	cmd.Flags().Bool("mine", false, "filter to tickets assigned to current user (SWIMLANE_USERNAME)")
 	cmd.Flags().Bool("csv", false, "output as CSV")
 	cmd.Flags().Bool("json", false, "output as JSON")
 	return cmd
@@ -42,6 +43,16 @@ func runLS(cmd *cobra.Command, args []string) error {
 	ready, _ := cmd.Flags().GetStringSlice("ready")
 	f := filter.FromFlags(pri, tag, status, ready)
 	tickets = filter.Apply(tickets, f)
+	if mine, _ := cmd.Flags().GetBool("mine"); mine {
+		currentUser := os.Getenv("SWIMLANE_USERNAME")
+		var filtered []*ticket.Ticket
+		for _, t := range tickets {
+			if t.Assignee == currentUser {
+				filtered = append(filtered, t)
+			}
+		}
+		tickets = filtered
+	}
 
 	csvOut, _ := cmd.Flags().GetBool("csv")
 	jsonOut, _ := cmd.Flags().GetBool("json")
@@ -83,7 +94,7 @@ func ticketSlugFromPath(path string) string {
 
 func writeLSCSV(w *os.File, tickets []*ticket.Ticket) error {
 	cw := csv.NewWriter(w)
-	if err := cw.Write([]string{"ulid", "title", "priority", "status", "ready", "tags", "blocked_by", "path"}); err != nil {
+	if err := cw.Write([]string{"ulid", "title", "priority", "status", "ready", "assignee", "tags", "blocked_by", "subtasks", "path"}); err != nil {
 		return err
 	}
 	for _, t := range tickets {
@@ -101,8 +112,10 @@ func writeLSCSV(w *os.File, tickets []*ticket.Ticket) error {
 			t.Priority,
 			t.Status,
 			readyStr,
+			t.Assignee,
 			strings.Join(t.Tags, "|"),
 			strings.Join(t.BlockedBy, "|"),
+			strings.Join(t.Subtasks, "|"),
 			t.Path,
 		}); err != nil {
 			return err
@@ -119,8 +132,10 @@ func writeLSJSON(w *os.File, tickets []*ticket.Ticket) error {
 		Priority  string   `json:"priority"`
 		Status    string   `json:"status"`
 		Ready     bool     `json:"ready"`
+		Assignee  string   `json:"assignee"`
 		Tags      []string `json:"tags"`
 		BlockedBy []string `json:"blocked_by"`
+		Subtasks  []string `json:"subtasks"`
 		Path      string   `json:"path"`
 	}
 	var rows []row
@@ -131,7 +146,7 @@ func writeLSJSON(w *os.File, tickets []*ticket.Ticket) error {
 		}
 		rows = append(rows, row{
 			ULID: t.ULID, Title: title, Priority: t.Priority, Status: t.Status,
-			Ready: t.Ready, Tags: t.Tags, BlockedBy: t.BlockedBy, Path: t.Path,
+			Ready: t.Ready, Assignee: t.Assignee, Tags: t.Tags, BlockedBy: t.BlockedBy, Subtasks: t.Subtasks, Path: t.Path,
 		})
 	}
 	enc := json.NewEncoder(w)

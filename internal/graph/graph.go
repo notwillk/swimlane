@@ -22,10 +22,15 @@ func Build(tickets []*ticket.Ticket) *Graph {
 	return &Graph{ByULID: byULID, Tickets: tickets}
 }
 
-// IsBlocked returns true if t has any blocker that is not done.
+// IsBlocked returns true if t has any blocker (blocked_by or subtask) that is not done.
 func (g *Graph) IsBlocked(t *ticket.Ticket) bool {
 	for _, ulid := range t.BlockedBy {
 		if dep, ok := g.ByULID[ulid]; ok && dep.Status != "done" {
+			return true
+		}
+	}
+	for _, ulid := range t.Subtasks {
+		if sub, ok := g.ByULID[ulid]; ok && sub.Status != "done" {
 			return true
 		}
 	}
@@ -75,10 +80,15 @@ func (g *Graph) Next(f *filter.Filter) string {
 		if len(blockedAtPriority) == 0 {
 			continue
 		}
-		// collect blockers (blocked_by refs that are not done)
+		// collect blockers (blocked_by and subtasks that are not done)
 		blockerSet := make(map[string]*ticket.Ticket)
 		for _, t := range blockedAtPriority {
 			for _, ulid := range t.BlockedBy {
+				if dep, ok := g.ByULID[ulid]; ok && dep.Status != "done" {
+					blockerSet[ulid] = dep
+				}
+			}
+			for _, ulid := range t.Subtasks {
 				if dep, ok := g.ByULID[ulid]; ok && dep.Status != "done" {
 					blockerSet[ulid] = dep
 				}

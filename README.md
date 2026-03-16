@@ -51,8 +51,9 @@ default:
 
 | Command | Description |
 |---------|-------------|
-| `swimlane ls` | List tickets (use `--csv` or `--json`) |
-| `swimlane new "title"` | Create a new ticket |
+| `swimlane ls` | List tickets (use `--csv`, `--json`, `--mine`) |
+| `swimlane create [title]` | Create a new ticket (stdin for description unless `--no-description`) |
+| `swimlane assign/claim/unclaim/start/stop/complete/delete/activate/deactivate <ulid>` | Lifecycle actions |
 | `swimlane next` | Print path of next ticket to implement |
 | `swimlane done <ulid>` | Mark ticket complete (deletes file) |
 | `swimlane static` | Validate config and all ticket YAML/frontmatter; exit 0 if pass, non-zero and list failures otherwise |
@@ -69,7 +70,7 @@ Use `--priority`, `--tag`, `--status`, `--ready`. Prefix with `!` to negate (e.g
 
 - **Filename**: `[ULID]-[slug].md` (e.g. `01J9T8ZK1BC5A9JH56T9Y9M1DX-implement-login-api.md`)
 - **Frontmatter** (required): `priority` (p0–p4), `status` (todo | in-progress | done), `ready` (boolean)
-- **Frontmatter** (optional): `$schema`, `title`, `blocked_by` (list of ULIDs), `tags`
+- **Frontmatter** (optional): `$schema`, `title`, `assignee`, `blocked_by` (list of ULIDs), `subtasks` (list of ULIDs), `tags`
 - **Body**: Markdown implementation instructions
 
 ## Build

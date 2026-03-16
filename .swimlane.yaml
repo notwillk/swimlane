@@ -1,0 +1,7 @@
+tickets: "todo/**/*.md"
+default_path: todo
+
+default:
+  priority: p2
+  ready: true
+  tags: []

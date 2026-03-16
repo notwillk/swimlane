@@ -31,6 +31,19 @@ const Config = `{
           "items": { "type": "string" }
         }
       }
+    },
+    "actions": {
+      "type": "object",
+      "description": "Optional per-action command overrides; keys are action names (create, assign, etc.), value has 'command' with {arg-name} placeholders",
+      "additionalProperties": {
+        "type": "object",
+        "properties": { "command": { "type": "string" } }
+      }
+    },
+    "close_parent_when_subtasks_done": {
+      "type": "string",
+      "enum": ["never", "always", "when-empty", "when-matches"],
+      "description": "When a subtask is marked done, close parent if all subtasks are done: never, always, when-empty (only if parent body empty), when-matches (LLM/normalized comparison)"
     }
   }
 }
@@ -49,9 +62,14 @@ const Ticket = `{
     "priority": { "type": "string", "enum": ["p0", "p1", "p2", "p3", "p4"] },
     "status": { "type": "string", "enum": ["todo", "in-progress", "done"] },
     "ready": { "type": "boolean" },
+    "assignee": { "type": "string", "description": "User assigned to this ticket" },
     "blocked_by": {
       "type": "array",
       "items": { "type": "string", "description": "ULID of blocking ticket" }
+    },
+    "subtasks": {
+      "type": "array",
+      "items": { "type": "string", "description": "ULID of subtask ticket" }
     },
     "tags": {
       "type": "array",

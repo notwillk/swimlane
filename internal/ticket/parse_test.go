@@ -47,3 +47,36 @@ body
 		t.Errorf("got %+v", ticket)
 	}
 }
+
+func TestParse_assigneeAndSubtasks(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "01J9T8ZK1BC5A9JH56T9Y9M1DX-bar.md")
+	content := []byte(`---
+priority: p2
+status: in-progress
+ready: false
+assignee: alice
+blocked_by:
+  - 01ABCDEF00000000000000001
+subtasks:
+  - 01ABCDEF00000000000000002
+  - 01ABCDEF00000000000000003
+tags:
+  - backend
+---
+
+Description here.
+`)
+	ticket, err := Parse(path, content)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if ticket.Assignee != "alice" {
+		t.Errorf("Assignee = %q, want alice", ticket.Assignee)
+	}
+	if len(ticket.BlockedBy) != 1 || ticket.BlockedBy[0] != "01ABCDEF00000000000000001" {
+		t.Errorf("BlockedBy = %v", ticket.BlockedBy)
+	}
+	if len(ticket.Subtasks) != 2 || ticket.Subtasks[0] != "01ABCDEF00000000000000002" || ticket.Subtasks[1] != "01ABCDEF00000000000000003" {
+		t.Errorf("Subtasks = %v", ticket.Subtasks)
+	}
+}
